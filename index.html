@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2028 학교/계열별 전공연계과목 안내</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .selection-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .select-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .select-group label {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        select {
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        select:hover {
+            border-color: #667eea;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .result-area {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            min-height: 300px;
+        }
+
+        .result-area.empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 18px;
+        }
+
+        .result-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .info-section {
+            margin-bottom: 25px;
+        }
+
+        .info-section h3 {
+            font-size: 18px;
+            color: #764ba2;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-section h3::before {
+            content: "📌";
+        }
+
+        .info-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .course-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .course-tag {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .notice {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-link {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .selection-area {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>2028 학교/계열별 전공연계과목 - 새봄가우스</h1>
+            <p>대학교와 학과를 선택하시면 권장 이수 과목을 확인하실 수 있습니다</p>
+            <p style="font-size: 14px; margin-top: 10px;">제공: 새봄가우스 | 만든이: yoosun99</p>
+        </div>
+
+        <div class="content">
+            <div class="nav-links">
+                <a href="analysis-report.html" class="nav-link">📊 심층 분석 보고서</a>
+                <a href="student-guide.html" class="nav-link">🎯 학생 가이드</a>
+                <a href="university-details.html" class="nav-link">🏫 대학별 상세정보</a>
+            </div>
+
+            <div class="notice">
+                <strong>※ 새봄가우스 안내사항</strong><br>
+                • 본 자료는 새봄가우스에서 제공하는 2028학년도 대입 전공연계과목 안내입니다.<br>
+                • 미발표 학교, 권장과목이 없는 학교는 자료에 포함시키지 않았습니다.<br>
+                • 대학별 시행계획발표에 따른 변동가능성이 있으니 자료를 사용하기 전 항상 확인부탁드립니다.<br>
+                • 원본을 최대한 반영하려 하였으나, 자료의 가독성을 위하여 임의로 정리한 부분이 있습니다.
+            </div>
+
+            <div class="selection-area">
+                <div class="select-group">
+                    <label for="university">대학교 선택</label>
+                    <select id="university">
+                        <option value="">대학교를 선택하세요</option>
+                    </select>
+                </div>
+
+                <div class="select-group">
+                    <label for="department">학과/계열 선택</label>
+                    <select id="department" disabled>
+                        <option value="">먼저 대학교를 선택하세요</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="result-area empty" id="resultArea">
+                대학교와 학과를 선택하시면 권장 이수 과목이 표시됩니다
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
